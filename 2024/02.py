@@ -41,7 +41,7 @@ def part1(w,i):        # => 33
 
 
 
-def part2(w,i):        # => 
+def part2(w,i):        # => 5139
     """
     Solve part 2
     
@@ -50,38 +50,24 @@ def part2(w,i):        # =>
     inscriptions = i.splitlines()
     runic_symbols = 0
 
+    w += [x[::-1] for x in w if len(x) > 1]
+
+
     for inscription in inscriptions:
         runics = 0
         last = 0
-        fnd = []
+        fnd = [0] * len(inscription)
         for j in range(0,len(inscription)):
             for word in w:
-                rev = "".join([word[::-1]])
                 cmp = "".join(inscription[j:j+len(word)])
                 if cmp == word:
-                    if last == 0 or last < j:
-                        runics += len(word)
-                    else:
-                        runics += j + len(word) - last - 1
-                    
-                    if last < j + len(word) - 1:
-                        last = j + len(word) - 1
-                    fnd.append(word)
+                    for k in range(j, j+len(word)):
+                        fnd[k] = 1
+            
+        runics = sum(fnd)
 
-
-                if cmp == rev and len(rev)>1 and word != rev:
-                    if last == 0 or last < j:
-                        runics += len(rev)
-                    else:
-                        runics += j + len(rev) - last - 1
-                    
-                    if last < j + len(rev) - 1:
-                        last = j + len(rev) - 1
-                    fnd.append(rev)
-
-
-        print(inscription + ": " + str(runics) + " symbols (" + ",".join(fnd) + ")")
-        fnd.clear()
+        # print(inscription + ": " + str(runics))
+        # fnd.clear()
         runic_symbols += runics
         
     return runic_symbols
