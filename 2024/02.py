@@ -6,8 +6,8 @@ from collections import defaultdict
 
 # IN_FILE1 = os.path.join("2024","inputs","2024-02-1.sample.txt")
 IN_FILE1 = os.path.join("2024","inputs","2024-02-1.txt")
-IN_FILE2 = os.path.join("2024","inputs","2024-02-2.sample.txt")
-# IN_FILE2 = os.path.join("2024","inputs","2024-02-2.txt")
+# IN_FILE2 = os.path.join("2024","inputs","2024-02-2.sample.txt")
+IN_FILE2 = os.path.join("2024","inputs","2024-02-2.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-02-1.sample.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-02-1.txt")
 
@@ -48,15 +48,41 @@ def part2(w,i):        # =>
     """
     
     inscriptions = i.splitlines()
-    # w_r = "".join([s[::-1] for s in w])
     runic_symbols = 0
 
     for inscription in inscriptions:
-        for word in w:
-            fwd = inscription.count(word) * len(word)
-            rev = "".join([word[::-1]])
-            bck = inscription.count(rev) * len(rev)
-            runic_symbols += fwd + bck
+        runics = 0
+        last = 0
+        fnd = []
+        for j in range(0,len(inscription)):
+            for word in w:
+                rev = "".join([word[::-1]])
+                cmp = "".join(inscription[j:j+len(word)])
+                if cmp == word:
+                    if last == 0 or last < j:
+                        runics += len(word)
+                    else:
+                        runics += j + len(word) - last - 1
+                    
+                    if last < j + len(word) - 1:
+                        last = j + len(word) - 1
+                    fnd.append(word)
+
+
+                if cmp == rev and len(rev)>1 and word != rev:
+                    if last == 0 or last < j:
+                        runics += len(rev)
+                    else:
+                        runics += j + len(rev) - last - 1
+                    
+                    if last < j + len(rev) - 1:
+                        last = j + len(rev) - 1
+                    fnd.append(rev)
+
+
+        print(inscription + ": " + str(runics) + " symbols (" + ",".join(fnd) + ")")
+        fnd.clear()
+        runic_symbols += runics
         
     return runic_symbols
             
