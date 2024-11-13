@@ -8,7 +8,7 @@ from collections import defaultdict
 IN_FILE1 = os.path.join("2024","inputs","2024-02-1.txt")
 # IN_FILE2 = os.path.join("2024","inputs","2024-02-2.sample.txt")
 IN_FILE2 = os.path.join("2024","inputs","2024-02-2.txt")
-# IN_FILE3 = os.path.join("2024","inputs","2024-02-1.sample.txt")
+IN_FILE3 = os.path.join("2024","inputs","2024-02-3.sample.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-02-1.txt")
 
 def parse1(IN_FILE):
@@ -73,8 +73,20 @@ def part2(w,i):        # => 5139
     return runic_symbols
             
     
-    
 
+def part3(w,i):     # => 
+    pass
+
+    # split the inscription lines
+    # instantiate a 3D list the size of the inscriptions with all 0's
+    # iterate through a line as in part 2
+    # check for edge cases, literally, where words wrap around
+    # repeat previous two steps for each line
+
+    # rotate the inscriptions (i) and do it again. (probably need to rotate the fnd[][], too.)
+    
+    # count the 1's in fnd and return the answer
+    
 
 
 def solve():
@@ -92,6 +104,12 @@ def solve():
     p2 = str(part2(words, inscription))
     exec_time = time.time() - start_time
     print(f"part 2: {p2} ({exec_time:.4f} sec)")
+
+    words, inscription = parse1(IN_FILE3)
+    start_time = time.time()
+    p3 = str(part3(words, inscription))
+    exec_time = time.time() - start_time
+    print(f"part 3: {p3} ({exec_time:.4f} sec)")
 
 
 
