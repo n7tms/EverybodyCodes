@@ -2,7 +2,6 @@
 
 import os
 import time
-from collections import defaultdict
 
 # IN_FILE1 = os.path.join("2024","inputs","2024-02-1.sample.txt")
 IN_FILE1 = os.path.join("2024","inputs","2024-02-1.txt")
@@ -40,7 +39,6 @@ def part1(w,i):        # => 33
     return runic_words
 
 
-
 def part2(w,i):        # => 5139
     """
     Solve part 2
@@ -73,8 +71,7 @@ def part2(w,i):        # => 5139
     return runic_symbols
             
     
-
-def part3(w,i):     # => 
+def part3(w,i):        # => 
     pass
 
     # split the inscription lines
@@ -92,7 +89,6 @@ def part3(w,i):     # =>
 def solve():
     """Solve the puzzle for the given input."""
     words, inscription = parse1(IN_FILE1)
-
     start_time = time.time()
     p1 = str(part1(words, inscription))
     exec_time = time.time() - start_time
