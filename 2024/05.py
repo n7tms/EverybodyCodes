@@ -28,6 +28,7 @@ def parse(IN_FILE):
 
     # rotate the matrix CCW
     t = list(reversed(list(zip(*y))))
+    t5 = [list(t0) for t0 in t]
 
     # return the matrix back to the program
     return t
@@ -41,8 +42,12 @@ def part1(clappers):           # =>
     #   if clapper > row count, insert clapper into position (clapper - row count)
     # print first digit in each row, from last to first.
 
-    for r,items in enumerate(clappers[::-1]):
-        print(str(r) + ": " + str(items))
+    for row in range(len(clappers)-2,-1,-1):
+        clapper = clappers[row+1].pop(0)
+        if clapper >= len(clappers[row]):
+            clappers.insert(clappers[row][clapper-1], clapper)
+        else:
+            clappers.insert(clappers[row][clapper-len(clappers[row])], clapper)
 
 
 def part2():            # => 
