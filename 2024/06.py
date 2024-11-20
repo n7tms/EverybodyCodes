@@ -3,6 +3,7 @@
 import numpy as np
 import os
 import time
+import ec_utils as ec
 
 
 IN_FILE1 = os.path.join("2024","inputs","2024-06-1.sample.txt")
