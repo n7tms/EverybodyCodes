@@ -1,115 +1,172 @@
 # Everybody Codes: 13
 
-import numpy as np
 import os
 import time
-from collections import deque
+import heapq
 
 
-IN_FILE1 = os.path.join("2024","inputs","2024-13-1.sample.txt")
-# IN_FILE1 = os.path.join("2024","inputs","2024-13-1.txt")
+# IN_FILE1 = os.path.join("2024","inputs","2024-13-1.sample.txt")
+IN_FILE1 = os.path.join("2024","inputs","2024-13-1.txt")
 # IN_FILE2 = os.path.join("2024","inputs","2024-13-2.sample.txt")
-# IN_FILE2 = os.path.join("2024","inputs","2024-13-2.txt")
+IN_FILE2 = os.path.join("2024","inputs","2024-13-2.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-13-3.sample.txt")
-# IN_FILE3 = os.path.join("2024","inputs","2024-13-3.txt")
+IN_FILE3 = os.path.join("2024","inputs","2024-13-3.txt")
 
-def find_least_cost_path(maze, start, end):
-    """Finds the least cost path in a maze using Dijkstra's algorithm."""
 
-    # Define directions (up, down, left, right)
-    directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+def parse_maze_to_dict(file_path):
+    with open(file_path, 'r') as f:
+        maze = [line.strip() for line in f.readlines()]
 
-    # Create a cost matrix (initialize with infinity)
-    cost = [[float('inf')] * len(maze[0]) for _ in range(len(maze))]
-    cost[start[0]][start[1]] = 0
+    rows, cols = len(maze), len(maze[0])
+    maze_dict = {}
+    start_node = ()
+    end_node = ()
 
-    # Create a queue for BFS
-    queue = deque([(start, 0)])
+    for r in range(rows):
+        for c in range(cols):
+            if maze[r][c] != '#':
+                if maze[r][c] == 'S':
+                    start_node = (r,c) 
+                if maze[r][c] == 'E':
+                    end_node = (r,c) 
+                
+                # Cost to enter the current cell
+                cell_cost = int(maze[r][c]) if maze[r][c].isdigit() else 0
+                neighbors = {}
+                for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#':
+                        neighbors[(nr, nc)] = int(maze[nr][nc]) if maze[nr][nc].isdigit() else 0
+                maze_dict[(r, c)] = [cell_cost, neighbors]
 
-    # Keep track of visited cells
-    visited = set([start])
+    return maze_dict, start_node, end_node
 
-    while queue:
-        (x, y), current_cost = queue.popleft()
+def parse_maze_to_dict3(file_path):
+    # A slightly different parse routine for part 3.
+    with open(file_path, 'r') as f:
+        maze = [line.strip() for line in f.readlines()]
 
-        # Check if we reached the end
-        if (x, y) == end:
-            return current_cost
+    rows, cols = len(maze), len(maze[0])
+    maze_dict = {}
+    start_nodes = []
+    end_node = ()
 
-        # Explore neighbors
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
+    for r in range(rows):
+        for c in range(cols):
+            if maze[r][c] != '#':
+                # this if block is the only change in this code, to generate a [] of start nodes
+                if maze[r][c] == 'S':
+                    start_nodes.append((r,c))
+                if maze[r][c] == 'E':
+                    end_node = (r,c) 
+                
+                # Cost to enter the current cell
+                cell_cost = int(maze[r][c]) if maze[r][c].isdigit() else 0
+                neighbors = {}
+                for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#':
+                        neighbors[(nr, nc)] = int(maze[nr][nc]) if maze[nr][nc].isdigit() else 0
+                maze_dict[(r, c)] = [cell_cost, neighbors]
 
-            # Check if neighbor is valid
-            if 0 <= nx < len(maze) and 0 <= ny < len(maze[0]) and maze[nx][ny] != 1:  #and (nx, ny) not in visited:
-                # new_cost = current_cost + maze[nx][ny]
-                new_cost = current_cost + (abs(maze[nx][ny] - maze[x][y])) + 1
-                if new_cost < cost[nx][ny]:
-                    cost[nx][ny] = new_cost
-                    queue.append(((nx, ny), new_cost))
-                    visited.add((nx, ny))
+    return maze_dict, start_nodes, end_node
 
-    return -1  # No path found
 
-def parse(IN_FILE):
-    """
-    Parse
-    """
+def dijkstra_with_dict(maze_dict, start, end):
+    # Priority queue: (cost, node)
+    pq = [(0, start)]
+    distances = {start: 0}
+    previous = {}
+    visited = set()
 
-    with open(IN_FILE) as fp:
-        data = fp.read().splitlines()
-    
-    start = (0,0)
-    end = (0,0)
-    maze = []
-    for cell in data:
-        row = []
-        for c in cell:
-            if c == "#":
-                row.append(float('inf'))
-            elif c == 'S':
-                start = (len(maze),len(row))
-                row.append(0)
-            elif c == 'E':
-                end = (len(maze),len(row))
-                row.append(0)
-            else:
-                row.append(int(c))
-        maze.append(row)
+    while pq:
+        current_cost, current_node = heapq.heappop(pq)
 
-    return maze, start, end
-    
+        # Skip already visited nodes
+        if current_node in visited:
+            continue
+        visited.add(current_node)
 
-def part1(maze, start, end):           # => 
-    return find_least_cost_path(maze,start,end)
+        # Process neighbors
+        if current_node in maze_dict:
+            cell_cost, neighbors = maze_dict[current_node]
+            for neighbor, move_cost in neighbors.items():
+                # determine if its shorter to go up the lift or down the lift
+                nc = abs(cell_cost - move_cost)
+                if nc > 5:
+                    new_cost = current_cost + (10 - nc) + 1
+                else:
+                    new_cost = current_cost + nc + 1
 
-def part2():            # => 
-    pass
 
-def part3():           # => 
-    pass       
 
+                if new_cost < distances.get(neighbor, float('inf')):
+                    distances[neighbor] = new_cost
+                    heapq.heappush(pq, (new_cost, neighbor))
+                    previous[neighbor] = current_node
+
+    # Reconstruct the shortest path if we reached the end
+    if end in distances:
+        path = []
+        current = end
+        while current in previous:
+            path.append(current)
+            current = previous[current]
+        path.append(start)
+        path.reverse()
+        return distances[end], path
+
+    # If the end node was never reached
+    return float('inf'), []
+
+
+
+
+def part1(maze):           # => 145
+    adjacency_list, start, end = parse_maze_to_dict(maze)
+    shortest_distance, path = dijkstra_with_dict(adjacency_list, start, end)
+
+    return shortest_distance
+
+
+def part2(maze):            # => 610
+    adjacency_list, start, end = parse_maze_to_dict(maze)
+    shortest_distance, path = dijkstra_with_dict(adjacency_list, start, end)
+
+    return shortest_distance
+
+
+def part3(maze):           # => 532
+    # There are multiple starting points.
+    # Use a slightly different parser that returns a "list" of start nodes.
+    adjacency_list, starts, end = parse_maze_to_dict3(maze)
+
+    # find the distance from every start to the end
+    distances = []
+    for s in starts:
+        shortest_distance, path = dijkstra_with_dict(adjacency_list, s, end)
+        distances.append(shortest_distance)
+
+    # return the shortest distance
+    return min(distances)
 
 
 def solve():
     """Solve the puzzle for the given input."""
-    data, s, e = parse(IN_FILE1)
     start_time = time.time()
-    p1 = str(part1(data, s, e))
+    p1 = str(part1(IN_FILE1))
     exec_time = time.time() - start_time
     print(f"part 1: {p1} ({exec_time:.4f} sec)")
 
-    # data = parse(IN_FILE2)
-    # start_time = time.time()
-    # p2 = str(part2(data))
-    # exec_time = time.time() - start_time
-    # print(f"part 2: {p2} ({exec_time:.4f} sec)")
+    start_time = time.time()
+    p2 = str(part2(IN_FILE2))
+    exec_time = time.time() - start_time
+    print(f"part 2: {p2} ({exec_time:.4f} sec)")
 
-    # data = parse(IN_FILE3)
-    # start_time = time.time()
-    # p3 = str(part3(data))
-    # exec_time = time.time() - start_time
-    # print(f"part 3: {p3} ({exec_time:.4f} sec)")
+    start_time = time.time()
+    p3 = str(part3(IN_FILE3))
+    exec_time = time.time() - start_time
+    print(f"part 3: {p3} ({exec_time:.4f} sec)")
 
 
 if __name__ == "__main__":
