@@ -3,6 +3,7 @@
 import numpy as np
 import os
 import time
+import ec_utils as ec
 
 
 IN_FILE1 = os.path.join("2024","inputs","2024-13-1.sample.txt")
@@ -29,13 +30,13 @@ def parse(IN_FILE):
         row = []
         for c in cell:
             if c == "#":
-                row.append(-1)
+                row.append(float('inf'))
             elif c == 'S':
                 start = (len(maze),len(row))
                 row.append(0)
             elif c == 'E':
                 end = (len(maze),len(row))
-                row.append(0)
+                row.append(1)
             else:
                 row.append(int(c))
         maze.append(row)
@@ -43,8 +44,8 @@ def parse(IN_FILE):
     return maze, start, end
     
 
-def part1():           # => 
-    pass
+def part1(maze, start, end):           # => 
+    return ec.find_least_cost_path(maze,start,end)
 
 def part2():            # => 
     pass
@@ -56,9 +57,9 @@ def part3():           # =>
 
 def solve():
     """Solve the puzzle for the given input."""
-    data = parse(IN_FILE1)
+    data, s, e = parse(IN_FILE1)
     start_time = time.time()
-    p1 = str(part1(data))
+    p1 = str(part1(data, s, e))
     exec_time = time.time() - start_time
     print(f"part 1: {p1} ({exec_time:.4f} sec)")
 

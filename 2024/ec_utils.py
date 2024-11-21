@@ -103,3 +103,41 @@ def printDegrees(Root, adj):
         else:
             print(len(adj[i]) - 1)
 
+
+
+def find_least_cost_path(maze, start, end):
+    """Finds the least cost path in a maze using Dijkstra's algorithm."""
+
+    # Define directions (up, down, left, right)
+    directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+
+    # Create a cost matrix (initialize with infinity)
+    cost = [[float('inf')] * len(maze[0]) for _ in range(len(maze))]
+    cost[start[0]][start[1]] = 0
+
+    # Create a queue for BFS
+    queue = deque([(start, 0)])
+
+    # Keep track of visited cells
+    visited = set([start])
+
+    while queue:
+        (x, y), current_cost = queue.popleft()
+
+        # Check if we reached the end
+        if (x, y) == end:
+            return current_cost
+
+        # Explore neighbors
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+
+            # Check if neighbor is valid
+            if 0 <= nx < len(maze) and 0 <= ny < len(maze[0]) and maze[nx][ny] != 1 and (nx, ny) not in visited:
+                new_cost = current_cost + maze[nx][ny]
+                if new_cost < cost[nx][ny]:
+                    cost[nx][ny] = new_cost
+                    queue.append(((nx, ny), new_cost))
+                    visited.add((nx, ny))
+
+    return -1  # No path found
