@@ -80,8 +80,83 @@ def parse(IN_FILE):
     return maze, start, end
     
 
-def part1(maze, start, end):           # => 
-    return find_least_cost_path(maze,start,end)
+import heapq
+
+def parse_maze(file_path):
+    with open(file_path, 'r') as f:
+        maze = [line.strip() for line in f.readlines()]
+    
+    rows, cols = len(maze), len(maze[0])
+    adjacency_list = {}
+
+    for r in range(rows):
+        for c in range(cols):
+            if maze[r][c] != '#':
+                neighbors = []
+                for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols and maze[nr][nc] != '#':
+                        if maze[nr][nc] in "SE":
+                            neighbors.append(((nr, nc), 0))
+                        else:
+                            neighbors.append(((nr, nc), int(maze[nr][nc])))
+                adjacency_list[(r, c)] = neighbors
+
+    return adjacency_list
+
+def dijkstra(adjacency_list, start, end):
+    # Priority queue: (cost, node)
+    pq = [(0, start)]
+    visited = set()
+    distances = {start: 0}
+    previous = {}
+
+    while pq:
+        current_cost, current_node = heapq.heappop(pq)
+        if current_node in visited:
+            continue
+
+        visited.add(current_node)
+
+        # Stop if we reached the end node
+        if current_node == end:
+            break
+
+        for neighbor, weight in adjacency_list.get(current_node, []):
+            if neighbor in visited:
+                continue
+            new_cost = current_cost + weight
+            if new_cost < distances.get(neighbor, float('inf')):
+                distances[neighbor] = new_cost
+                heapq.heappush(pq, (new_cost, neighbor))
+                previous[neighbor] = current_node
+
+    # Reconstruct the path
+    path = []
+    current = end
+    while current in previous:
+        path.append(current)
+        current = previous[current]
+    path.append(start)
+    path.reverse()
+
+    return distances.get(end, float('inf')), path
+
+
+
+
+
+def part1(maze):           # => 
+    # Example usage:
+    # file_path = 'maze.txt'  # The maze file
+    start = (2, 0)  # Starting point S
+    end = (2, 6)    # Ending point E
+
+    adjacency_list = parse_maze(maze)
+    shortest_distance, path = dijkstra(adjacency_list, start, end)
+
+    print(f"Shortest distance: {shortest_distance}")
+    print(f"Path: {path}")
 
 def part2():            # => 
     pass
@@ -93,9 +168,9 @@ def part3():           # =>
 
 def solve():
     """Solve the puzzle for the given input."""
-    data, s, e = parse(IN_FILE1)
+    # data, s, e = parse(IN_FILE1)
     start_time = time.time()
-    p1 = str(part1(data, s, e))
+    p1 = str(part1(IN_FILE1))
     exec_time = time.time() - start_time
     print(f"part 1: {p1} ({exec_time:.4f} sec)")
 
