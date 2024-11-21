@@ -22,18 +22,33 @@ def parse(IN_FILE):
     with open(IN_FILE) as fp:
         data = fp.read().splitlines()
 
-    nails = [int(n) for n in data]
-    return nails
+    chariots = {}
+    for line in data:
+        c, actions = line.split(":")
+        if c not in chariots:
+            chariots[c] = [actions.split(","), []]
+    return chariots
     
 
-def part1(nails):           # => 87
+def part1(chariots):           # => 
+    for chariot, data in chariots.items():
+        pwr = 10
+        actions = data[0]
+        for x in range(10):
+            action = actions[x % len(actions)]
+            if action == "+":
+                pwr += 1
+            elif action == "-":
+                pwr -= 1
+            
+
+    
+
+def part2(nails):            # => 
     pass
 
-def part2(nails):            # => 844594
-    pass
 
-
-def part3(nails):       # => 127387940
+def part3(nails):       # => 
     pass
 
 
