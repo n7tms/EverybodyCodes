@@ -7,11 +7,10 @@ import time
 
 # IN_FILE1 = os.path.join("2024","inputs","2024-07-1.sample.txt")
 IN_FILE1 = os.path.join("2024","inputs","2024-07-1.txt")
-IN_FILE2 = os.path.join("2024","inputs","2024-07-2.sample.txt")
-# IN_FILE2 = os.path.join("2024","inputs","2024-07-2.txt")
+# IN_FILE2 = os.path.join("2024","inputs","2024-07-2.sample.txt")
+IN_FILE2 = os.path.join("2024","inputs","2024-07-2.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-07-3.sample.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-07-3.txt")
-
 
 
 def parse(IN_FILE):
@@ -56,27 +55,39 @@ def part1(chariots):           # => GFDKAJIHB
     return ''.join(out2)
 
 
-    
-
 def part2(chariots):            # => 
-    # track = "S-=++=-==++=++=-=+=-=+=+=--=-=++=-==++=-+=-=+=-=+=+=++=-+==++=++=-=-=---=++==--+++==++=+=--==++==+++=++=+++=--=+=-=+=-+=-+=-+-=+=-=+=-+++=+==++++==---=+=+=-S"
-    track = "+===++-=+=-S"
+    # DKEIBGJCH wrong
+    # KDGBECJIH wrong
+    # ?
+    track = "-=++=-==++=++=-=+=-=+=+=--=-=++=-==++=-+=-=+=-=+=+=++=-+==++=++=-=-=---=++==--+++==++=+=--==++==+++=++=+++=--=+=-=+=-+=-+=-+-=+=-=+=-+++=+==++++==---=+=+=-S"
+    # track = "+===++-=+=-S"
 
     loops = 10
-    for loop in range(loops):
-        for s, segment in enumerate(track):
-            for chariot, data in chariots.items():
-                pwr = 10
-                actions = chariots[chariot]["Actions"]
-                pwrs = []
-                for x in range(10):
-                    action = actions[x % len(actions)]
-                    if action == "+":
-                        pwr += 1
-                    elif action == "-":
-                        pwr -= 1
-                    chariots[chariot]["Powers"].append(pwr)
-                chariots[chariot]["Total"] = sum(chariots[chariot]["Powers"])
+    for chariot, data in chariots.items():
+        pwr = 10
+        actions = chariots[chariot]["Actions"]
+
+        for loop in range(loops):
+            for s, segment in enumerate(track):
+                action = actions[s % len(actions)] if track[s] in "=S" else track[s]
+                if action == "+":
+                    pwr += 1
+                elif action == "-":
+                    pwr -= 1 if pwr > 0 else 0 
+                chariots[chariot]["Powers"].append(pwr)
+        chariots[chariot]["Total"] = sum(chariots[chariot]["Powers"])
+                
+    # probably not the most efficient, but create a dictionary of just the chariots and total powers...
+    totals = {}
+    for c,d in chariots.items():
+        totals[c] = d["Total"]
+    
+    # ... sort them, reverse them, and return them
+    out = sorted(totals.items(), key=lambda item: item[1])
+    out2 = [t[0] for t in out]
+    out2.reverse()
+    return ''.join(out2)
+
 
 
 def part3(nails):       # => 
