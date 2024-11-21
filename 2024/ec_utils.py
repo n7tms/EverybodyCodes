@@ -6,7 +6,7 @@ from collections import defaultdict
 class Graph:
 
     # Constructor
-    def __init__(self):
+    def __init__(self): 
 
         # Default dictionary to store graph
         self.graph = defaultdict(list)
@@ -42,9 +42,6 @@ class Graph:
         # Call the recursive helper function
         # to print DFS traversal
         self.DFSUtil(v, visited)
-
-
-
 
 
 # Function to add an edge between vertices x and y
