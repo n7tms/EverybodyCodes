@@ -5,8 +5,8 @@ import time
 import heapq
 
 
-IN_FILE1 = os.path.join("2024","inputs","2024-15-1.sample.txt")
-# IN_FILE1 = os.path.join("2024","inputs","2024-15-1.txt")
+# IN_FILE1 = os.path.join("2024","inputs","2024-15-1.sample.txt")
+IN_FILE1 = os.path.join("2024","inputs","2024-15-1.txt")
 # IN_FILE2 = os.path.join("2024","inputs","2024-15-2.sample.txt")
 # IN_FILE2 = os.path.join("2024","inputs","2024-15-2.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-15-3.sample.txt")
@@ -67,22 +67,28 @@ def dijkstra_with_dict(maze_dict, start, end):
                     previous[neighbor] = current_node
 
     # Reconstruct the shortest path if we reached the end
-    if end in distances:
-        path = []
-        current = end
-        while current in previous:
-            path.append(current)
-            current = previous[current]
-        path.append(start)
-        path.reverse()
-        return distances[end], path
+    paths = []
+    for e in end:
+        if e in distances:
+            path = []
+            current = e
+            while current in previous:
+                path.append(current)
+                current = previous[current]
+            # path.append(start)
+            path.reverse()
+        paths.append(len(path))
+
+    # return distances[end], path
+    return min(paths)
 
     # If the end node was never reached
     return float('inf'), []    
 
-def part1(maze):           # => not 226
-    adjacency_list, start, end = parse_maze_to_dict(maze)
-    shortest_distance, path = dijkstra_with_dict(adjacency_list, start, end)
+def part1(maze):           # => not 226, not 260
+    adjacency_list, start, herbs = parse_maze_to_dict(maze)
+    # shortest_distance, path = dijkstra_with_dict(adjacency_list, start, herbs)
+    shortest_distance = dijkstra_with_dict(adjacency_list, start, herbs) * 2
 
     return shortest_distance
 
@@ -98,9 +104,10 @@ def part3(nails):       # =>
 
 def solve():
     """Solve the puzzle for the given input."""
-    data = parse(IN_FILE1)
+    # data = parse(IN_FILE1)
+    # data = parse_maze_to_dict(IN_FILE1)
     start_time = time.time()
-    p1 = str(part1(data))
+    p1 = str(part1(IN_FILE1))
     exec_time = time.time() - start_time
     print(f"part 1: {p1} ({exec_time:.4f} sec)")
 
