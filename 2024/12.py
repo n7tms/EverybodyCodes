@@ -99,6 +99,7 @@ def find_missile_power3(launcher, target, ground):
     lr, lc = launcher
     tr, tc = target
     max_range = (tc - lc) // 2
+    lowest_power = 9999
 
     # implement time delay
     for time_delay in range(tc-lc):
@@ -117,7 +118,7 @@ def find_missile_power3(launcher, target, ground):
                 mtc -= 1
 
                 if (mr, mc) == (mtr, mtc):
-                    return power
+                    lowest_power = power if power < lowest_power else lowest_power
                 if mc > tc:
                     return 0
         
@@ -127,7 +128,7 @@ def find_missile_power3(launcher, target, ground):
                 mtr += 1
                 mtc -= 1
                 if (mr, mc) == (mtr, mtc):
-                    return power
+                    lowest_power = power if power < lowest_power else lowest_power
                 if mc > tc:
                     return 0
 
@@ -138,9 +139,10 @@ def find_missile_power3(launcher, target, ground):
                 mtr += 1
                 mtc -= 1
                 if (mr, mc) == (mtr, mtc):
-                    return power
+                    lowest_power = power if power < lowest_power else lowest_power
 
-    return 0
+    if lowest_power == 9999: lowest_power = 0
+    return lowest_power
 
 def part1(launchers, targets, ground):           # => 180
     total_shooting_power = 0
