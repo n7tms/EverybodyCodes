@@ -62,8 +62,10 @@ def part1(wheels):           # => <:- ^_^ <:< <.>
 def part2(wheels):            # => 
     wheel_index = [0]*len(wheels)
     total_byte_coin = 0
+    unique_faces = {}
 
-    for cnt in range(202420242024):
+    rounds = 0
+    while True:
         for wheel, data in wheels.items():
             faces, spins = data['faces'], data['spins']
             wheel_index[wheel] += spins
@@ -74,23 +76,43 @@ def part2(wheels):            # =>
             resulting_face = resulting_face + faces[wheel_index[w] % len(faces)]
         # print(resulting_face)
 
-        # Extracting just the eyes
-        eye_pos = [0, 2, 3, 5, 6, 8, 9, 11]
-        extracted_characters = [resulting_face[i] for i in eye_pos if i < len(resulting_face)]
+        if resulting_face not in unique_faces:
+            # Extracting just the eyes
+            eye_pos = [0, 2, 3, 5, 6, 8, 9, 11]
+            extracted_characters = [resulting_face[i] for i in eye_pos if i < len(resulting_face)]
 
-        # Counting each character
-        character_counts = {}
-        for char in extracted_characters:
-            if char in character_counts:
-                character_counts[char] += 1
-            else:
-                character_counts[char] = 1
+            # Counting each character
+            character_counts = {}
+            for char in extracted_characters:
+                if char in character_counts:
+                    character_counts[char] += 1
+                else:
+                    character_counts[char] = 1
 
-        for _, v in character_counts.items():
-            if v > 2:
-                total_byte_coin += 1 + (v-3)
+            for _, v in character_counts.items():
+                if v > 2:
+                    total_byte_coin += 1 + (v-3)
+            
+            unique_faces[resulting_face] = [total_byte_coin, round]
+            rounds += 1
 
-    return total_byte_coin
+            print(f"Rnd: {rounds}, total coins: {total_byte_coin}")
+        else:
+            break
+
+    print(rounds, " ", len(unique_faces))
+
+    # what face is 202420242024 going to end on
+    ending_face = 202420242024 % rounds
+    if ending_face == 0: 
+        byte_coins = 202420242024 // rounds * total_byte_coin
+    else:
+        for uf, uf_data in unique_faces.items():
+            if uf_data[1] == ending_face:
+                byte_coins += uf_data[1]
+        
+    return byte_coins
+    
 
 
 def part3(data):       # => 
