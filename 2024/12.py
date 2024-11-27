@@ -103,12 +103,11 @@ def find_missile_power3(launcher, target, ground):
 
     # implement time delay
     for time_delay in range(tc-lc):
-        mtr = tr + time_delay
-        mtc = tc - time_delay
-
         for power in range(1,max_range):
             # start the missile at the launcher
             mr, mc = lr, lc
+            mtr = tr + time_delay
+            mtc = tc - time_delay
 
             # upward diaganol trajectory
             for x in range(power):
@@ -119,8 +118,8 @@ def find_missile_power3(launcher, target, ground):
 
                 if (mr, mc) == (mtr, mtc):
                     lowest_power = power if power < lowest_power else lowest_power
-                if mc > tc:
-                    return 0
+                if mc > mtc:
+                    break
         
             # horizantol trajectory
             for x in range(power):
@@ -129,11 +128,11 @@ def find_missile_power3(launcher, target, ground):
                 mtc -= 1
                 if (mr, mc) == (mtr, mtc):
                     lowest_power = power if power < lowest_power else lowest_power
-                if mc > tc:
-                    return 0
+                if mc > mtc:
+                    break
 
             # downward diaganol trajectory
-            while mr < ground and mc < tc:
+            while mr < ground and mc < mtc:
                 mr += 1
                 mc += 1
                 mtr += 1
@@ -161,13 +160,21 @@ def part2(nails):            # => 20490
 
 def part3(launchers, meteors, ground):       # => 
     total_shooting_power = 0
-    
+    meteor_power = {}
+
     for t in meteors:
         for l in launchers:
             k,v = next(iter(l.items()))
             power = find_missile_power3(k,t, ground)
             if power > 0:
-                total_shooting_power += v * power
+                m_power = v * power
+                if t in meteor_power:
+                    meteor_power[t] = m_power if m_power < meteor_power[t] else meteor_power[t]
+                else:
+                    meteor_power[t] = m_power
+    
+    for k,v in meteor_power.items():
+        total_shooting_power += v
     return total_shooting_power
 
 
