@@ -71,7 +71,7 @@ def part2(data):            # => 1641
     pass
 
 
-def part3(palms, paths):       # => 226331 (brute force; took a while!)
+def part3(palms, paths):       # => 
     potential_wells = set(paths) - set(palms)
     directions = [(-1,0),(0,1),(1,0),(0,-1)]
 
@@ -109,7 +109,7 @@ def part3(palms, paths):       # => 226331 (brute force; took a while!)
         
         minimum_time = recv_water if recv_water < minimum_time else minimum_time
         recorded_times[well] = recv_water
-        print(f"well: {well}, time: {recv_water}")
+        print(f"well: {well}, time: {recv_water}, min so far: {minimum_time}")
 
     
     return minimum_time
