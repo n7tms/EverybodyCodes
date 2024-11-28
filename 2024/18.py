@@ -109,7 +109,7 @@ def part3(palms, paths):       # => 226331 (brute force; took a while!)
         
         minimum_time = recv_water if recv_water < minimum_time else minimum_time
         recorded_times[well] = recv_water
-        print(f"well: {well}, time: {recv_water}")
+        print(f"well: {well}, time: {recv_water}, min so far: {minimum_time}")
 
     
     return minimum_time
