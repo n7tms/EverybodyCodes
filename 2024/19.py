@@ -10,7 +10,7 @@ IN_FILE1 = os.path.join("2024","inputs","2024-19-1.txt")
 # IN_FILE2 = os.path.join("2024","inputs","2024-19-2.sample.txt")
 IN_FILE2 = os.path.join("2024","inputs","2024-19-2.txt")
 # IN_FILE3 = os.path.join("2024","inputs","2024-19-3.sample.txt")
-# IN_FILE3 = os.path.join("2024","inputs","2024-19-3.txt")
+IN_FILE3 = os.path.join("2024","inputs","2024-19-3.txt")
 
 
 
@@ -85,8 +85,9 @@ def part1(rotations, hidden_message):           # => 6948379425631369
     return find_message(hidden_message)
 
 
-def part2(rotations, hidden_message):            # => 9345391356337546
-    for _ in range(100):
+def part2(rotations, hidden_message, rounds):            # => 9345391356337546
+    for rnd in range(rounds):
+        print(rnd, end=" ")
         rot_index = 0
         for r in range(1,len(hidden_message)-1):
             for c in range(1,len(hidden_message[1])-1):
@@ -113,17 +114,17 @@ def solve():
     exec_time = time.time() - start_time
     print(f"part 1: {p1} ({exec_time:.4f} sec)")
 
-    r,h = parse(IN_FILE2)
-    start_time = time.time()
-    p2 = str(part2(r,h))
-    exec_time = time.time() - start_time
-    print(f"part 2: {p2} ({exec_time:.4f} sec)")
-
-    # data = parse(IN_FILE3)
+    # r,h = parse(IN_FILE2)
     # start_time = time.time()
-    # p3 = str(part3(data))
+    # p2 = str(part2(r,h, 100))
     # exec_time = time.time() - start_time
-    # print(f"part 3: {p3} ({exec_time:.4f} sec)")
+    # print(f"part 2: {p2} ({exec_time:.4f} sec)")
+
+    r,h = parse(IN_FILE3)
+    start_time = time.time()
+    p3 = str(part2(r,h,1048576000))
+    exec_time = time.time() - start_time
+    print(f"part 3: {p3} ({exec_time:.4f} sec)")
 
 
 if __name__ == "__main__":
