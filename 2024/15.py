@@ -82,7 +82,7 @@ def dijkstra_with_dict(maze_dict, start, end):
     # return distances[end], path
     return min(paths)
 
-    # If the end node was never reached
+    # If the end node was never reached 
     return float('inf'), []    
 
 def part1(maze):           # => not 226, not 260
