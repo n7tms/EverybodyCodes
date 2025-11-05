@@ -25,8 +25,6 @@ def divide(a: list, b: list) -> list:
     x1, y1 = a
     x2, y2 = b
 
-    # ar = x1 // x2
-    # br = y1 // y2
     ar = int(x1 / x2)
     br = int(y1 / y2)
 
