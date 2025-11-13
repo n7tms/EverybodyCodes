@@ -2,10 +2,9 @@
 
 import os
 import time
-import math
 
 
-# IN_FILE1 = os.path.join("2025","inputs","2025-04-1.sample.txt")
+# IN_FILE3 = os.path.join("2025","inputs","2025-04-1.sample.txt")
 IN_FILE1 = os.path.join("2025","inputs","2025-04-1.txt")
 # IN_FILE2 = os.path.join("2025","inputs","2025-04-2.sample.txt")
 IN_FILE2 = os.path.join("2025","inputs","2025-04-2.txt")
@@ -33,7 +32,6 @@ def parse3(IN_FILE):
 
 
 def min_turns(gears, N):
-    # gears = [list(map(int, l.split("|"))) for l in input_str.strip().splitlines() if l.strip()]
     gears = [list(pair) for pair in zip(gears[:-1], gears[1:])]
     num = N
     den = 1
@@ -42,20 +40,30 @@ def min_turns(gears, N):
         den *= a
     return (num + den - 1) // den  # ceiling division
 
+
 def min_turns3(input_str, N):
     gears = [list(map(int, l.split("|"))) for l in input_str]
-    # gears = [list(pair) for pair in zip(gears[:-1], gears[1:])]
-    num = N
-    den = 1
-    for a, b in gears:
-        num *= b
-        den *= a
-    return (num + den - 1) // den  # ceiling division
+    first = gears[0][0]
+    last = gears[-1][0]
 
+    # recreate the gear list, shifting the first of the next to be the last of the previous
+    # 5, 5|10, 10|20, 5 -->> [5,5], [10,10], [10,5]
+    new_gears = list()
+    for g0, g1 in gears[1:-1]:
+        new_gears.append([first, g0])
+        first = g1
+    new_gears.append([first, last])
+
+    # the total ratio is the found by multiplying the ratio of each of the individual ratios
+    # 5/5 * 10/10 * 10/5 = total_ratio    
+    total_ratio = 1
+    for a, b in new_gears:
+        total_ratio *= (a/b)
+
+    return int(total_ratio*N)
 
 
 def part1(gears):           # => 18243
-
     pairs = [list(pair) for pair in zip(gears[:-1], gears[1:])]
     turn_ratio = 1
     for p1, p2 in pairs:
@@ -65,32 +73,13 @@ def part1(gears):           # => 18243
     return total_turns
 
 
-
-
 def part2(gears):           # => 2852760736197
-
     pairs = [list(pair) for pair in zip(gears[:-1], gears[1:])]
-    # turn_ratio = 1
-    # for p1, p2 in pairs:
-    #     turn_ratio = turn_ratio * (p1 / p2)
-        
-    # first_gear = 10000000000000 / turn_ratio
-    # return first_gear
-
-    # print(gears[0], gears[-1])
-    # ratio = gears[0] / gears[-1]
-
-    # # first_gear = math.ceil(10000000000000 // ratio)
-    # first_gear = 10000000000000 // ratio
-    # return first_gear
 
     return min_turns(gears, 10000000000000)
     
 
-
-
-def part3(x):           # => 
-
+def part3(x):           # => 128784641190
     return min_turns3(x, 100)
 
 
