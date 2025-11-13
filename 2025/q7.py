@@ -4,10 +4,10 @@ import os
 import time
 
 
-IN_FILE3 = os.path.join("2025","inputs","2025-07.sample.txt")
+# IN_FILE3 = os.path.join("2025","inputs","2025-07.sample.txt")
 IN_FILE1 = os.path.join("2025","inputs","2025-07-1.txt")
 IN_FILE2 = os.path.join("2025","inputs","2025-07-2.txt")
-# IN_FILE3 = os.path.join("2025","inputs","2025-07-3.txt")
+IN_FILE3 = os.path.join("2025","inputs","2025-07-3.txt")
 
 
 
@@ -72,20 +72,17 @@ def part2(names, rules):     # => 3128
     return idx_sum
     
 
-def part3(names, rules):           # => 
-
+def part3(names, rules):           # => 2137846
+    words = set()
     total_found = 0
     for name in names:
         if not match(name, rules):
             continue
         
-        words = set()
         find_words(name, 7, 11, words, rules)
-
-        print(f"{name}: Found {len(words)} distinct words (length 7-11):")
-        total_found += len(words)
+        # print(f"{name}: Found {len(words)} distinct words (length 7-11):")
     
-    return total_found
+    return len(words)
 
 
 def solve():
