@@ -25,7 +25,7 @@ def parse(IN_FILE):
 
 
 
-def part1(data):           # => 61
+def part1(data):     # => 61
     nails = [int(x) for x in data]
     nails_cnt = max(nails)
     center = nails_cnt / 2
@@ -58,7 +58,7 @@ def part2(data):     # => 2924895
     return knots
     
 
-def part3(data):           # => 2791
+def part3(data):     # => 2791
     nails = [int(x) for x in data]
 
     # generate the connecting ropes and sort them so the first element is the lower number
@@ -67,7 +67,7 @@ def part3(data):           # => 2791
 
     # generate all possible cuts
     max_nail = max(nails)
-    possible_cuts = [[i,j] for i,j in combinations(range(1,max_nail+1), 2) if min((j-i)%8, (i-j)%(max_nail+1)) > 1]
+    possible_cuts = [[i,j] for i,j in combinations(range(1,max_nail+1), 2) if min((j-i)%max_nail, (i-j)%(max_nail)) > 1]
     
     # iterate through all the possible cuts, and check for how many existing ropes would be cut.
     max_cuts = 0
