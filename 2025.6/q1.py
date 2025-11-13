@@ -43,14 +43,30 @@ def eni_algo(n, e, m):
     return "".join(remainders)
 
 def eni_algo2(n, e, m):
+
+    memoized_rem = list()
     score = 1
     remainders = list()
     for _ in range(e):
         score *= n
         rem = score % m
         remainders.insert(0,rem)
+
+        if remainders[:5] in memoized_rem:
+            T = e
+            n = _
+            s = memoized_rem.index(remainders[:5])
+            c = n - s
+            correct = memoized_rem[s + (T - 1 - s) % c]
+            break
+        else:
+            memoized_rem.append(remainders[:5].copy())
     
-    return "".join(remainders[:5])
+    if _+1 == e:
+        correct = remainders[:5].copy()
+       
+
+    return "".join([str(r) for r in correct])
 
 
 
@@ -65,7 +81,7 @@ def part1(data):     # => 1099999998
     return max(all_remainders)
 
 
-def part2(data):     # => 
+def part2(data):     # => 236309384189337
     all_remainders = list()
     for params in data:
         remainders = 0
