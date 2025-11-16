@@ -38,35 +38,32 @@ def parse(IN_FILE):
     return sheep
 
 
-def get_dragon_moves(to_check: list, depth:int, target_depth: int):
+dragon_moves = []
+
+def get_dragon_moves(start, depth, target_depth):
     global dragon_moves
+    r, c = start
 
-    loc = to_check.pop()
-    dragon_moves.append(loc)
-    if depth >= target_depth: return
+    # Add current position
+    dragon_moves.append([r, c])
 
-    r,c = loc
-    if r-2 >= 0 and c-1 >= 0:
-        to_check.append([r-2, c-1])
-    if r-2 >= 0 and c+1 < c_max:
-        to_check.append([r-2, c+1])
-    if r-1 >= 0 and c+2 < c_max:
-        to_check.append([r-1, c+2])
-    if r+1 < r_max and c+2 < c_max:
-        to_check.append([r+1, c+2])
-    if r+2 < r_max and c+1 < c_max:
-        to_check.append([r+2, c+1])
-    if r+2 < r_max and c-1 >= 0:
-        to_check.append([r+1, c-1])
-    if r+1 < r_max and c-2 >= 0:
-        to_check.append([r+1, c-2])
-    if r-1 >= 0 and c-2 >=0:
-        to_check.append([r-1, c-2])
-
-    if to_check:
-        get_dragon_moves(to_check, depth+1, target_depth)
-    else: 
+    # Don't go deeper than target_depth
+    if depth >= target_depth:
         return
+
+    # Knight moves
+    deltas = [
+        (-2, -1), (-2, +1),
+        (-1, -2), (-1, +2),
+        (+1, -2), (+1, +2),
+        (+2, -1), (+2, +1),
+    ]
+
+    # Explore each valid move
+    for dr, dc in deltas:
+        nr, nc = r + dr, c + dc
+        if 0 <= nr < r_max and 0 <= nc < c_max:
+            get_dragon_moves([nr, nc], depth + 1, target_depth)
     
 
 
@@ -75,13 +72,18 @@ def part1(data):     # =>
 
 
     # find all possible dragon moves
-    get_dragon_moves([[r_ctr, c_ctr]], 0, 1)
+    get_dragon_moves([r_ctr, c_ctr], 0, 3)
+    print(len(dragon_moves))
 
     # compare dragon moves with sheep locations
-
+    sxd = list()
+    for d in data:
+        if d in dragon_moves:
+            sxd.append(d)
+    
     # return number of "intersections"
 
-    return 0
+    return len(sxd)
 
 
 
