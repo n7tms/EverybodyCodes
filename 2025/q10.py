@@ -62,6 +62,7 @@ def parse2(IN_FILE):
 
 
 dragon_moves = []
+last_dragon_moves = []
 
 def get_dragon_moves(start, depth, target_depth):
     global dragon_moves
@@ -87,7 +88,33 @@ def get_dragon_moves(start, depth, target_depth):
         nr, nc = r + dr, c + dc
         if 0 <= nr < r_max and 0 <= nc < c_max:
             get_dragon_moves([nr, nc], depth + 1, target_depth)
+
+
+
+def get_dragon_moves2(ldm: list, move: int):
+    global dragon_moves, last_dragon_moves
     
+    additional_moves = []
+
+    # Knight moves
+    deltas = [
+        (-2, -1), (-2, +1),
+        (-1, -2), (-1, +2),
+        (+1, -2), (+1, +2),
+        (+2, -1), (+2, +1),
+    ]
+
+    for r,c in ldm:
+        for dr, dc in deltas:
+            nr, nc = r + dr, c + dc
+            if 0+move <= nr < r_max and 0 <= nc < c_max:
+                additional_moves.append([nr, nc])
+    
+    # remove duplicates
+    additional_moves = [list(tup) for tup in {tuple(pos) for pos in additional_moves}]
+
+    last_dragon_moves = additional_moves[:]
+    dragon_moves += additional_moves[:]
 
 
 
@@ -115,20 +142,30 @@ def advance_sheep(sh):
             new_sheep.append([r,c])
     return new_sheep
 
+
 def part2(sh: list, sa: list):     # =>
-    global dragon_moves
+    global dragon_moves, last_dragon_moves
 
-    eaten_sheep = 0
+    total_eaten_sheep = 0
+    dragon_moves = list()
+    last_dragon_moves = [[r_ctr, c_ctr]]
 
-    for move in range(3):
-        dragon_moves = list()
-        get_dragon_moves([r_ctr, c_ctr], 0, move+1)
+    for move in range(20):
+        eaten_sheep = 0
+        # get_dragon_moves([r_ctr, c_ctr], 0, move+1)
+        get_dragon_moves2(last_dragon_moves, move)
+        dragon_moves = sorted([list(tup) for tup in {tuple(pos) for pos in dragon_moves}])
+
+        # if this is the first move, then the center is not a viable move.
+        # if move == 0:
+        #     dragon_moves.remove([r_ctr, c_ctr])
 
         # remove safes from dragon moves
-        for d in dragon_moves:
+        for d in dragon_moves[:]:
             if d in sa:
                 dragon_moves.remove(d)
-        
+
+        # Dragon's turn; eat the sheep he moved onto.        
         gone_sheep = list()
         for d in dragon_moves:
             if d in sh:
@@ -136,12 +173,31 @@ def part2(sh: list, sa: list):     # =>
                     gone_sheep.append(d)
         eaten_sheep += len(gone_sheep)
 
+        # Remove the eaten sheep
         for x in gone_sheep:
             sh.remove(x)
+        
+        # Sheep's move
         sh = advance_sheep(sh)
 
+        # Eat the sheep that landed on where the dragon currently is.
+        gone_sheep = list()
+        for d in dragon_moves[:]:
+            if d in sh:
+                if d not in gone_sheep:
+                    gone_sheep.append(d)
+        eaten_sheep += len(gone_sheep)
 
-    return eaten_sheep
+        # Remove the eaten sheep
+        for x in gone_sheep:
+            if x in sh: sh.remove(x)
+
+        # Display the status of the round
+        print(f"Round: {move}    Eaten Sheep so far: {eaten_sheep}")
+
+        total_eaten_sheep += eaten_sheep
+
+    return total_eaten_sheep
     
 
 
