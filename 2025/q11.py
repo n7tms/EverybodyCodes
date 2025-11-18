@@ -4,11 +4,10 @@ import os
 import time
 
 
-# IN_FILE2 = os.path.join("2025","inputs","2025-11.sample.txt")
+# IN_FILE3 = os.path.join("2025","inputs","2025-11.sample.txt")
 IN_FILE1 = os.path.join("2025","inputs","2025-11-1.txt")
 IN_FILE2 = os.path.join("2025","inputs","2025-11-2.txt")
 IN_FILE3 = os.path.join("2025","inputs","2025-11-3.txt")
-
 
 
 def parse(IN_FILE):
@@ -20,14 +19,10 @@ def parse(IN_FILE):
         data = fp.read().splitlines()
 
     cols = [int(c) for c in data]
-
     return cols
 
 
-
-
 def part1(data):           # => 302
-
     rounds = 0
     checksum = 0
 
@@ -42,7 +37,7 @@ def part1(data):           # => 302
                 data[i] -= 1
                 data[i+1] += 1
                 moved = True
-        print(f"{rounds}: {data}")
+        # print(f"{rounds}: {data}")
     
     rounds -= 1
 
@@ -62,7 +57,6 @@ def part1(data):           # => 302
         if rounds == 10:
             break
 
-
     # calculate checksum
     checksum = 0
     for i,d in enumerate(data):
@@ -72,7 +66,6 @@ def part1(data):           # => 302
 
 
 def part2(data):     # => 3887051
-
     rounds = 0
     checksum = 0
 
@@ -91,8 +84,6 @@ def part2(data):     # => 3887051
     
     rounds -= 1
 
-
-
     # phase 2
     moved = True
     while moved:
@@ -106,14 +97,36 @@ def part2(data):     # => 3887051
                 moved = True
         # print(f"{rounds}: {data}")
 
-
     return rounds-1
 
-    
 
-def part3(data):           # => 
+def part2b(data):     # => 3887051
+    # ... using the solution for phase 2 that I found for part 3.
+    rounds = 0
+    checksum = 0
 
-    return 0
+    # phase 1
+    moved = True
+    while moved:
+        rounds += 1
+        moved = False
+        for i, _ in enumerate(data):
+            if i+1 >= len(data): break
+            if data[i] > data[i+1]:
+                data[i] -= 1
+                data[i+1] += 1
+                moved = True
+        # print(f"{rounds}: {data}")
+    rounds -= 1
+
+    # phase 2
+    mean = sum(data) // len(data)
+    return sum(mean - num for num in data if num < mean) + rounds
+
+
+def part3(data):           # => 147097688246708
+    mean = sum(data) // len(data)
+    return sum(mean - num for num in data if num < mean)
 
 
 def solve():
@@ -126,13 +139,13 @@ def solve():
 
     x = parse(IN_FILE2)
     start_time = time.time()
-    p2 = str(part2(x))
+    p2 = str(part2b(x))
     exec_time = time.time() - start_time
     print(f"part 2: {p2} ({exec_time:.4f} sec)")
 
     x = parse(IN_FILE3)
     start_time = time.time()
-    p3 = str(part2(x))
+    p3 = str(part3(x))
     exec_time = time.time() - start_time
     print(f"part 3: {p3} ({exec_time:.4f} sec)")
 
