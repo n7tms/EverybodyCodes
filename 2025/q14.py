@@ -1,9 +1,9 @@
-# EverybodyCodes - Quest x
+# EverybodyCodes - Quest 14
 
 import os
 import time
 
-DAY = x
+DAY = 14
 
 IN_FILE1 = os.path.join("2025","inputs",f"2025-{DAY}.sample.txt")
 # IN_FILE1 = os.path.join("2025","inputs",f"2025-{DAY}-1.txt")
