@@ -2,12 +2,14 @@
 
 import os
 import time
+from collections import deque
+from itertools import chain
 
 DAY = 13
 
-# IN_FILE2 = os.path.join("2025","inputs",f"2025-{DAY}.sample.txt")
+IN_FILE2 = os.path.join("2025","inputs",f"2025-{DAY}.sample.txt")
 IN_FILE1 = os.path.join("2025","inputs",f"2025-{DAY}-1.txt")
-IN_FILE2 = os.path.join("2025","inputs",f"2025-{DAY}-2.txt")
+# IN_FILE2 = os.path.join("2025","inputs",f"2025-{DAY}-2.txt")
 IN_FILE3 = os.path.join("2025","inputs",f"2025-{DAY}-3.txt")
 
 
@@ -19,20 +21,28 @@ def parse(IN_FILE):
     with open(IN_FILE) as fp:
         data = fp.read().splitlines()
 
-    dial = [0] * (len(data) + 1)
-    dial[0] = 1
-    pos = 0
-    idx = 1
-    for d in data:
-        if pos == 0: # on the right
-            dial[idx] = int(d)
-            pos = 1
-        else:
-            dial[-idx] = int(d)
-            pos = 0
-            idx += 1
+    # dial = [0] * (len(data) + 1)
+    # dial[0] = 1
+    # pos = 0
+    # idx = 1
+    # for d in data:
+    #     if pos == 0: # on the right
+    #         dial[idx] = int(d)
+    #         pos = 1
+    #     else:
+    #         dial[-idx] = int(d)
+    #         pos = 0
+    #         idx += 1
 
-    return dial
+    # return dial
+
+
+    nums = [int(x) for x in data]
+    right_side = nums[::2]        # first, third, fifth... → go right
+    left_side = nums[1::2]        # second, fourth... → go left (farthest first)
+    return [1] + right_side + left_side[::-1]
+    
+
 
 
 def parse2(IN_FILE):
@@ -57,6 +67,7 @@ def parse2(IN_FILE):
 
     new_dial = [item for sublist in dial for item in sublist]
     return new_dial
+
 
 
 
