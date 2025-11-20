@@ -126,7 +126,7 @@ def create_location_grid(data):
 def destroy_barrels(start, barrels) -> list:
     pass
 
-def part3(data):           # => 
+def part3(data):           # => 4161 is the correct answer
     max_destroyed = 0
 
     # create a location map of all the barrels
