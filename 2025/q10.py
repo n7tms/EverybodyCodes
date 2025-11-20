@@ -5,9 +5,9 @@ import time
 from itertools import combinations
 
 
-IN_FILE2 = os.path.join("2025","inputs","2025-10.sample.txt")
+# IN_FILE2 = os.path.join("2025","inputs","2025-10.sample.txt")
 IN_FILE1 = os.path.join("2025","inputs","2025-10-1.txt")
-# IN_FILE2 = os.path.join("2025","inputs","2025-10-2.txt")
+IN_FILE2 = os.path.join("2025","inputs","2025-10-2.txt")
 # IN_FILE3 = os.path.join("2025","inputs","2025-10-3.txt")
 
 dragon_moves = list()
@@ -143,7 +143,7 @@ def advance_sheep(sh):
     return new_sheep
 
 
-def part2(sh: list, sa: list):     # =>
+def part2(sh: list, sa: list):     # => 1727 is the correct answer
     global dragon_moves, last_dragon_moves
 
     total_eaten_sheep = 0
@@ -201,7 +201,7 @@ def part2(sh: list, sa: list):     # =>
     
 
 
-def part3(data):     # => 
+def part3(data):     # => 2262549661306 is the correct answer (if you ever get here! this is hard!!)
 
     return 0
 
