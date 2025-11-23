@@ -7,8 +7,8 @@ import time
 DAY = 15
 
 # IN_FILE1 = os.path.join("2025","inputs",f"2025-{DAY}.sample.txt")
-IN_FILE1 = os.path.join("2025","inputs",f"2025-{DAY}-1.txt")
-IN_FILE2 = os.path.join("2025","inputs",f"2025-{DAY}-2.txt")
+# IN_FILE1 = os.path.join("2025","inputs",f"2025-{DAY}-1.txt")
+# IN_FILE2 = os.path.join("2025","inputs",f"2025-{DAY}-2.txt")
 IN_FILE3 = os.path.join("2025","inputs",f"2025-{DAY}-3.txt")
 
 
@@ -143,17 +143,17 @@ def part3(data):
 
 def solve():
     """Solve the puzzle for the given input."""
-    x = parse(IN_FILE1)
-    start_time = time.time()
-    p1 = str(part1(x))
-    exec_time = time.time() - start_time
-    print(f"part 1: {p1} ({exec_time:.4f} sec)")
+    # x = parse(IN_FILE1)
+    # start_time = time.time()
+    # p1 = str(part1(x))
+    # exec_time = time.time() - start_time
+    # print(f"part 1: {p1} ({exec_time:.4f} sec)")
 
-    x = parse(IN_FILE2)
-    start_time = time.time()
-    p2 = str(part2(x))
-    exec_time = time.time() - start_time
-    print(f"part 2: {p2} ({exec_time:.4f} sec)")
+    # x = parse(IN_FILE2)
+    # start_time = time.time()
+    # p2 = str(part2(x))
+    # exec_time = time.time() - start_time
+    # print(f"part 2: {p2} ({exec_time:.4f} sec)")
 
     x = parse(IN_FILE3)
     start_time = time.time()
