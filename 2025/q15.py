@@ -85,7 +85,7 @@ def part2(data):     # => 3805
 
 
 
-def part3(data):
+def part3(data):    # -> 543877123 is the correct answer. found with q15b.py (not with the following code)
     # First pass: find goal and bounds
     r = c = idx = 0
     facing = [(-1,0),(0,1),(1,0),(0,-1)]
